@@ -1,0 +1,82 @@
+name: Builder
+on: push
+
+env:
+  # GITHUB_SHA: ${{ github.sha }}
+  DOCKER_REGISTRY: docker.scriptdw.com
+  REPO: library
+  BRANCH: ${{ github.branch }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      # - uses: 
+      - run: |
+        docker build . -t $DOCKER_REGISTRY/$GITHUB_REPOSITORY:$GITHUB_RUN_ID
+        docker push $DOCKER_REGISTRY/$GITHUB_REPOSITORY:$GITHUB_RUN_ID
+
+# env:
+#   # DOCKER_REGISTRY: docker.pkg.github.com
+#   USERNAME: sagapo
+#   # PASSWORD: 7ad4231b0055397c5770e7d850d0548e13826e50
+#   PASSWORD: dangwei0.123
+#   REPO: k8s-deploy-actions
+#   PROJECT: ghost
+
+#   DOCKER_IMAGE: sagapo/k8s-deploy-actions:${{ github.sha }}
+#   DEPLOYMENT_NAME: ghost
+#   SERVICE_NAME: ghost
+
+#   SECRET_ID: AKIDZFoCSPTsSvEOK9t9NQI4iCJKynQsdGBD
+#   SECRET_KEY: dAYnuqaKF7qP4czdVL2Yt37B5seIlamt
+#   TKE_REGION: ap-beijing
+#   CLUSTER_ID: cls-9nsnqwkz
+
+#   PORT: 80
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@master
+
+#       - uses: Azure/docker-login@v1
+#         with:
+#           # login-server: ${{ env.DOCKER_REGISTRY }}
+#           username: ${{ env.USERNAME }}
+#           password: ${{ env.PASSWORD }}
+      
+#       - run: |
+#           docker build . -t $USERNAME/$REPO:$GITHUB_SHA
+#           docker push $USERNAME/$REPO:$GITHUB_SHA
+
+#       - name: Set up Kustomize
+#         run: |
+#           curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+#           chmod u+x ./kustomize
+
+#       - name: Set up .kube/config for cluster
+#         uses: TencentCloud/tke-cluster-credential-action@v1
+#         with:
+#           secret_id: ${{ env.SECRET_ID }}
+#           secret_key: ${{ env.SECRET_KEY }}
+#           tke_region: ${{ env.TKE_REGION }}
+#           cluster_id: ${{ env.CLUSTER_ID }}
+#       - name: Switch to TKE context
+#         run: |
+#           kubectl config use-context $CLUSTER_ID-context-default
+
+#       - name: Template to yaml
+#         run: |
+#           cat ./base/deployment.yaml.template | sed "s#DOCKER_IMAGE#$DOCKER_IMAGE#g" > ./base/deployment.yaml
+#           cat ./base/deployment.yaml
+
+#       - name: Deploy
+#         run: |
+#           ./kustomize edit set image $DOCKER_IMAGE
+#           ./kustomize build . | kubectl apply -f -
+#           kubectl rollout status deployment/ghost
+#           kubectl get services -o wide

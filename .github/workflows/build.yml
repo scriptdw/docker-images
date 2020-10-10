@@ -15,8 +15,8 @@ jobs:
 
       # - uses: 
       - run: |
-        docker build . -t $DOCKER_REGISTRY/$GITHUB_REPOSITORY:$GITHUB_RUN_ID
-        docker push $DOCKER_REGISTRY/$GITHUB_REPOSITORY:$GITHUB_RUN_ID
+          docker build . -t $DOCKER_REGISTRY/$GITHUB_REPOSITORY:$GITHUB_RUN_ID
+          docker push $DOCKER_REGISTRY/$GITHUB_REPOSITORY:$GITHUB_RUN_ID
 
 # env:
 #   # DOCKER_REGISTRY: docker.pkg.github.com
